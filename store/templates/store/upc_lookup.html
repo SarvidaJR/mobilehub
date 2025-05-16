@@ -1,0 +1,75 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>UPC Lookup with Scanner</h2>
+    
+    <!-- Form for Manual Entry -->
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="upc" class="form-label">Enter or Scan UPC Code:</label>
+            <input type="text" class="form-control" id="upc" name="upc" placeholder="e.g., 012993441012">
+        </div>
+        <button type="submit" class="btn btn-primary">Lookup</button>
+        <button type="button" class="btn btn-secondary" onclick="startScanner()">📷 Scan Barcode</button>
+    </form>
+
+    <!-- Scanner Preview -->
+    <div id="scanner-container" class="mt-4" style="display: none;">
+        <video id="scanner-preview" width="100%" style="max-width: 400px;"></video>
+    </div>
+
+    {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+
+    {% if product %}
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ product.brand }} - {{ product.model }}</h6>
+                <p class="card-text">{{ product.description }}</p>
+                {% if product.images %}
+                    <img src="{{ product.images.0 }}" alt="Product Image" class="img-fluid">
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- QuaggaJS Barcode Scanner -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+<script>
+function startScanner() {
+    document.getElementById("scanner-container").style.display = "block";
+
+    Quagga.init({
+        inputStream: {
+            name: "Live",
+            type: "LiveStream",
+            target: document.querySelector('#scanner-preview'),
+            constraints: {
+                facingMode: "environment"
+            },
+        },
+        decoder: {
+            readers: ["upc_reader", "ean_reader"]
+        },
+    }, function(err) {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        Quagga.start();
+    });
+
+    Quagga.onDetected(function(data) {
+        const code = data.codeResult.code;
+        document.getElementById("upc").value = code;
+        Quagga.stop();
+        document.getElementById("scanner-container").style.display = "none";
+    });
+}
+</script>
+{% endblock %}

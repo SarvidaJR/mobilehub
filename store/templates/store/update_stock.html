@@ -1,0 +1,25 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0"><i class="fas fa-box"></i> Update Stock for {{ phone.name }}</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Update Stock
+                </button>
+            </form>
+            <a href="{% url 'phone_list' %}" class="btn btn-secondary mt-3">
+                <i class="fas fa-arrow-left"></i> Back to Phone List
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

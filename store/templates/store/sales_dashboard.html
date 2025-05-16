@@ -1,0 +1,77 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="card-title">
+                <i class="fas fa-chart-line"></i> Sales Dashboard
+            </h2>
+            <p class="fs-5 mt-3"><strong>Total Sales:</strong> ₱{{ total_sales }}</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3"><i class="fas fa-calendar-alt"></i> Sales by Month</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Month</th>
+                            <th>Total Sales (₱)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in sales_by_month %}
+                            <tr>
+                                <td>{{ entry.month|date:"F Y" }}</td>
+                                <td>₱{{ entry.total }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-center text-muted">No sales data available.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3"><i class="fas fa-star"></i> Most Popular Phone</h4>
+            {% if popular_phone %}
+                <p class="fs-5">{{ popular_phone.phone__name }}<span class="text-muted">({{ popular_phone.count }} sold)</span></p>
+            {% else %}
+                <p class="text-muted">No data available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Total Phones Sold -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3"><i class="fas fa-box"></i> Total Phones Sold</h4>
+            <p class="fs-5">{{ total_phones_sold }}</p>
+        </div>
+    </div>
+
+    <!-- Top Earning Phone -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title mb-3"><i class="fas fa-trophy"></i> Top Earning Phone</h4>
+            {% if top_earning %}
+                <p class="fs-5">{{ top_earning.phone__name }} <span class="text-muted">(₱{{ top_earning.revenue }})</span></p>
+            {% else %}
+                <p class="text-muted">No data available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <!-- Back to Homepage Button -->
+    <div class="mb-4">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Homepage
+        </a>
+    </div>
+
+    <h2 class="mb-4 text-center"><i class="fas fa-mobile-alt"></i> Available Phones</h2>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for phone in phones %}
+            <div class="col">
+                <div class="card shadow-sm h-100 border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ phone.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ phone.brand }}</h6>
+                        <p class="card-text">
+                            <strong>Price:</strong> ₱{{ phone.price }}<br>
+                            <strong>Stock:</strong> {{ phone.stock }}
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-2 justify-content-between">
+                            <a href="{% url 'phone_detail' phone.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+
+                            {% if phone.stock > 0 %}
+                                <a href="{% url 'buy_phone' %}?phone_bought={{ phone.id }}" class="btn btn-sm btn-success">
+                                    <i class="fas fa-cart-plus"></i> Buy
+                                </a>
+                            {% else %}
+                                <span class="btn btn-sm btn-secondary disabled">
+                                    <i class="fas fa-ban"></i> Out of Stock
+                                </span>
+                            {% endif %}
+
+                            <a href="{% url 'edit_phone' phone.id %}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'delete_phone' phone.id %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                            <a href="{% url 'update_stock' phone.id %}" class="btn btn-sm btn-info">
+                                <i class="fas fa-sync-alt"></i> Update Stock
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col">
+                <div class="alert alert-info w-100 text-center">
+                    <i class="fas fa-box-open"></i> No phones available right now.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

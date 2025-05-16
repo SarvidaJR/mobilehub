@@ -1,0 +1,26 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">{{ phone.name }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ phone.image.url }}" alt="{{ phone.name }}" class="img-fluid rounded" style="max-width:100%;">
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Brand:</strong> {{ phone.brand }}</p>
+                    <p><strong>Price:</strong> ₱{{ phone.price }}</p>
+                    <p><strong>Description:</strong> {{ phone.description }}</p>
+                    <a href="{% url 'phone_list' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

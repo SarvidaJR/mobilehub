@@ -1,0 +1,43 @@
+/* Global body style with violet gradient */
+body {
+    background: linear-gradient(to right, #2e003e, #5e2a7e, #7b4397);
+    color: #f3f3f3; /* Light font color for contrast */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Make sure navbar text is readable */
+.navbar, .navbar-light .navbar-nav .nav-link {
+    background-color: #3b1d5a !important;
+    color: #ffffff !important;
+}
+
+/* Card style update */
+.card {
+    background-color: #4b2a67;
+    color: #ffffff;
+    border: none;
+}
+
+/* Button tweaks */
+.btn-outline-primary, .btn-success, .btn-warning, .btn-danger, .btn-info {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+.btn:hover {
+    opacity: 0.85;
+}
+
+/* Message styles override */
+.messages li {
+    color: #ffffff;
+}
+
+/* Adjust links */
+a {
+    color: #d4bfff;
+}
+a:hover {
+    color: #e6d6ff;
+}

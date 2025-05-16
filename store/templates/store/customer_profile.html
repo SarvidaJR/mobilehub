@@ -1,0 +1,48 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-4">
+                <i class="fas fa-user-circle"></i> Customer Profile: {{ customer.name }}
+            </h3>
+            <p>
+                <strong><i class="fas fa-envelope"></i> Email:</strong> {{ customer.email }}
+            </p>
+
+            <h4 class="mt-4 mb-3">
+                <i class="fas fa-history"></i> Order History
+            </h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-mobile-alt"></i> Phone</th>
+                            <th><i class="fas fa-calendar-alt"></i> Date Bought</th>
+                            <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            <tr>
+                                <td>{{ order.phone_bought.name }}</td>
+                                <td>{{ order.date_bought|date:"Y-m-d H:i" }}</td>
+                                <td>{{ order.get_payment_method_display }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">No orders found for this customer.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <a href="{% url 'customer_orders' %}" class="btn btn-outline-secondary mt-3">
+                <i class="fas fa-arrow-left"></i> Back to Customer Orders
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

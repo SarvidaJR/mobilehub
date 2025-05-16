@@ -1,0 +1,24 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+    <h2>Customer Orders (Filtered by Payment Method: {{ payment_method }})</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" action="{% url 'filter_orders_by_payment' %}">
+        <label for="payment_method">Filter by Payment Method:</label>
+        <select name="payment_method" id="payment_method" onchange="this.form.submit()">
+            <option value="on_the_spot" {% if payment_method == 'on_the_spot' %}selected{% endif %}>On the Spot</option>
+            <option value="loan" {% if payment_method == 'loan' %}selected{% endif %}>Loan</option>
+        </select>
+    </form>
+
+    <ul>
+        {% for order in orders %}
+            <li>
+                Order for {{ order.phone.name }} ({{ order.phone.brand }}) - Payment Method: {{ order.payment_method }} - Status: {{ order.status }}
+            </li>
+        {% empty %}
+            <li>No orders found for this payment method.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

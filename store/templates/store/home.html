@@ -1,0 +1,81 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-image: url("{% static 'images/bg.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #f0e9ff;
+    }
+
+    .home-container {
+        background: rgba(46, 0, 62, 0.9); /* dark violet with transparency */
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        max-width: 550px;
+        width: 100%;
+        position: relative;
+        left: 8%;
+    }
+
+    .home-container h2 {
+        margin-bottom: 20px;
+        color: #e6d6ff;
+        font-size: 2em;
+    }
+
+    .home-container p {
+        margin-bottom: 30px;
+        font-size: 1.1em;
+        color: #d4bfff;
+    }
+
+    .home-container a button,
+    .btn-blue {
+        padding: 12px 25px;
+        background-color: #8c52ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        margin: 10px 5px;
+    }
+
+    .home-container a button:hover,
+    .btn-blue:hover {
+        background-color: #6f32cc;
+    }
+
+    .logo {
+        width: 100px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="home-container">
+    <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+    <h2>Welcome to MobileHub</h2>
+    <p>We offer the best mobile phones at affordable prices!</p>
+
+    <a href="{% url 'add_phone' %}">
+        <button>Add Phone</button>
+    </a>
+
+    <a href="{% url 'sales_dashboard' %}" class="btn-blue">📊 View Sales Dashboard</a>
+</div>
+{% endblock %}
