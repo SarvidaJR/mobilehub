@@ -4,7 +4,7 @@ from .models import Phone, Customer
 
 
 class PhoneAdmin(admin.ModelAdmin):
-    list_display = ('name', 'brand', 'price', 'stock')  # Include stock in list display
+    list_display = ('name', 'brand', 'price', 'stock', 'release_date')  # Added release_date
     search_fields = ('name', 'brand')
 
 # Register your models here.

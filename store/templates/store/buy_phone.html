@@ -8,7 +8,7 @@
                 <i class="fas fa-cart-arrow-down"></i> Buy a Phone
             </h3>
 
-            <form method="post">
+            <form method="post" id="buyForm">
                 {% csrf_token %}
 
                 <div class="mb-3">
@@ -23,21 +23,40 @@
 
                 <div class="mb-3">
                     <label for="phone_bought" class="form-label"><i class="fas fa-mobile-alt"></i> Phone:</label>
-                    <select name="phone_bought" class="form-select" required>
+                    <select name="phone_bought" class="form-select" id="phoneSelect" required>
                         <option disabled selected value="">-- Select a phone --</option>
                         {% for phone in phones %}
-                            <option value="{{ phone.id }}">{{ phone.name }} (₱{{ phone.price }})</option>
+                            <option value="{{ phone.id }}" data-price="{{ phone.price }}">{{ phone.name }} (₱{{ phone.price }})</option>
                         {% endfor %}
                     </select>
                 </div>
 
                 <div class="mb-4">
                     <label for="payment_method" class="form-label"><i class="fas fa-credit-card"></i> Payment Method:</label>
-                    <select name="payment_method" class="form-select" required>
+                    <select name="payment_method" class="form-select" id="paymentMethod" required>
                         <option value="full">Full Payment</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly (12 months)</option>
+                        <option value="quarterly">Quarterly (4 payments)</option>
                     </select>
+                </div>
+
+                <div class="mb-4" id="paymentDetails">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Payment Details</h5>
+                            <div id="fullPayment" class="payment-option">
+                                <p><strong>Full Payment:</strong> ₱<span class="full-amount">0.00</span></p>
+                            </div>
+                            <div id="monthlyPayment" class="payment-option">
+                                <p><strong>Monthly Payment:</strong> ₱<span class="monthly-amount">0.00</span> x 12 months</p>
+                                <p class="text-muted small">Total: ₱<span class="monthly-total">0.00</span> (5% interest)</p>
+                            </div>
+                            <div id="quarterlyPayment" class="payment-option">
+                                <p><strong>Quarterly Payment:</strong> ₱<span class="quarterly-amount">0.00</span> x 4 payments</p>
+                                <p class="text-muted small">Total: ₱<span class="quarterly-total">0.00</span> (3% interest)</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="d-flex justify-content-center gap-3 flex-column flex-sm-row">
@@ -52,4 +71,69 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneSelect = document.getElementById('phoneSelect');
+    const paymentMethod = document.getElementById('paymentMethod');
+    
+    function updatePaymentDetails() {
+        const selectedOption = phoneSelect.options[phoneSelect.selectedIndex];
+        if (selectedOption.value === "") return;
+        
+        const basePrice = parseFloat(selectedOption.dataset.price);
+        
+        // Full payment (no interest)
+        document.querySelector('.full-amount').textContent = basePrice.toFixed(2);
+        
+        // Monthly payment (5% interest)
+        const monthlyTotal = basePrice * 1.05;
+        const monthlyPayment = monthlyTotal / 12;
+        document.querySelector('.monthly-amount').textContent = monthlyPayment.toFixed(2);
+        document.querySelector('.monthly-total').textContent = monthlyTotal.toFixed(2);
+        
+        // Quarterly payment (3% interest)
+        const quarterlyTotal = basePrice * 1.03;
+        const quarterlyPayment = quarterlyTotal / 4;
+        document.querySelector('.quarterly-amount').textContent = quarterlyPayment.toFixed(2);
+        document.querySelector('.quarterly-total').textContent = quarterlyTotal.toFixed(2);
+    }
+    
+    phoneSelect.addEventListener('change', updatePaymentDetails);
+    paymentMethod.addEventListener('change', function() {
+        const method = this.value;
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.style.display = 'none';
+        });
+        switch(method) {
+            case 'full':
+                document.getElementById('fullPayment').style.display = 'block';
+                break;
+            case 'monthly':
+                document.getElementById('monthlyPayment').style.display = 'block';
+                break;
+            case 'quarterly':
+                document.getElementById('quarterlyPayment').style.display = 'block';
+                break;
+        }
+    });
+});
+</script>
+
+<style>
+.payment-option {
+    display: none;
+}
+#fullPayment {
+    display: block;
+}
+.card-title {
+    color: #333;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+.text-muted {
+    color: #666;
+}
+</style>
 {% endblock %}

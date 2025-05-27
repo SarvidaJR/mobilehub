@@ -8,6 +8,7 @@ class Phone(models.Model):
     description = models.TextField()
     image = models.ImageField(upload_to='phones/')
     stock = models.PositiveIntegerField(default=0)
+    release_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return self.name

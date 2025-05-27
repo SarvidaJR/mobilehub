@@ -1,4 +1,5 @@
 {% extends 'store/base.html' %}
+{% load store_extras %}
 
 {% block content %}
 <div class="container mt-5">
@@ -37,7 +38,8 @@
                             <th><i class="fas fa-envelope"></i> Email</th>
                             <th><i class="fas fa-mobile-alt"></i> Phone Bought</th>
                             <th><i class="fas fa-calendar-alt"></i> Date Bought</th>
-                            <th><i class="fas fa-credit-card"></i> Payment Type</th>
+                            <th><i class="fas fa-money-bill"></i> Price</th>
+                            <th><i class="fas fa-credit-card"></i> Payment Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,11 +53,36 @@
                                 <td>{{ customer.email }}</td>
                                 <td>{{ customer.phone_bought.name }}</td>
                                 <td>{{ customer.date_bought|date:"Y-m-d H:i" }}</td>
-                                <td>{{ customer.get_payment_method_display }}</td>
+                                <td>₱{{ customer.phone_bought.price }}</td>
+                                <td>
+                                    {% if customer.payment_method == 'monthly' %}
+                                        {% with monthly_total=customer.phone_bought.price|multiply:1.05 monthly_payment=monthly_total|divide:12 %}
+                                        <div>
+                                            <strong>Monthly:</strong> ₱{{ monthly_payment|floatformat:2 }} x 12
+                                            <br>
+                                            <small class="text-muted">Total: ₱{{ monthly_total|floatformat:2 }} (5% interest)</small>
+                                        </div>
+                                        {% endwith %}
+                                    {% elif customer.payment_method == 'quarterly' %}
+                                        {% with quarterly_total=customer.phone_bought.price|multiply:1.03 quarterly_payment=quarterly_total|divide:4 %}
+                                        <div>
+                                            <strong>Quarterly:</strong> ₱{{ quarterly_payment|floatformat:2 }} x 4
+                                            <br>
+                                            <small class="text-muted">Total: ₱{{ quarterly_total|floatformat:2 }} (3% interest)</small>
+                                        </div>
+                                        {% endwith %}
+                                    {% else %}
+                                        <div>
+                                            <strong>Full Payment:</strong> ₱{{ customer.phone_bought.price }}
+                                            <br>
+                                            <small class="text-muted">No interest</small>
+                                        </div>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="5" class="text-center text-muted">No orders found for this payment method.</td>
+                                <td colspan="6" class="text-center text-muted">No orders found for this payment method.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -65,3 +92,15 @@
     </div>
 </div>
 {% endblock %}
+
+<style>
+.table td {
+    vertical-align: middle;
+}
+.text-muted {
+    font-size: 0.875rem;
+}
+.table td div {
+    margin: 0;
+}
+</style>

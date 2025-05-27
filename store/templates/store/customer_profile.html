@@ -1,4 +1,5 @@
 {% extends 'store/base.html' %}
+{% load store_extras %}
 
 {% block content %}
 <div class="container mt-5">
@@ -21,6 +22,8 @@
                             <th><i class="fas fa-mobile-alt"></i> Phone</th>
                             <th><i class="fas fa-calendar-alt"></i> Date Bought</th>
                             <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                            <th><i class="fas fa-money-bill"></i> Price</th>
+                            <th><i class="fas fa-info-circle"></i> Payment Details</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,10 +32,26 @@
                                 <td>{{ order.phone_bought.name }}</td>
                                 <td>{{ order.date_bought|date:"Y-m-d H:i" }}</td>
                                 <td>{{ order.get_payment_method_display }}</td>
+                                <td>₱{{ order.phone_bought.price }}</td>
+                                <td>
+                                    {% if order.payment_method == 'monthly' %}
+                                        {% with monthly_total=order.phone_bought.price|multiply:1.05 monthly_payment=monthly_total|divide:12 %}
+                                        <p class="mb-0">Monthly: ₱{{ monthly_payment|floatformat:2 }} x 12</p>
+                                        <small class="text-muted">Total: ₱{{ monthly_total|floatformat:2 }}</small>
+                                        {% endwith %}
+                                    {% elif order.payment_method == 'quarterly' %}
+                                        {% with quarterly_total=order.phone_bought.price|multiply:1.03 quarterly_payment=quarterly_total|divide:4 %}
+                                        <p class="mb-0">Quarterly: ₱{{ quarterly_payment|floatformat:2 }} x 4</p>
+                                        <small class="text-muted">Total: ₱{{ quarterly_total|floatformat:2 }}</small>
+                                        {% endwith %}
+                                    {% else %}
+                                        Full Payment: ₱{{ order.phone_bought.price }}
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="3" class="text-center text-muted">No orders found for this customer.</td>
+                                <td colspan="5" class="text-center text-muted">No orders found for this customer.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -46,3 +65,19 @@
     </div>
 </div>
 {% endblock %}
+
+{% load static %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add any additional JavaScript if needed
+});
+</script>
+
+<style>
+.table td {
+    vertical-align: middle;
+}
+.text-muted {
+    font-size: 0.875rem;
+}
+</style>
